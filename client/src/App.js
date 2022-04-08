@@ -19,36 +19,30 @@ const styles = theme => ({
   }
 })
 
-const customers = [
-  {
-    'id': 1,
-    'image': 'https://placeimg.com/64/64/1',
-    'name': '박도준',
-    'birthday': '981116',
-    'gender': '남자',
-    'job': '대학생'
-  },
-  {
-    'id': 2,
-    'image': 'https://placeimg.com/64/64/2',
-    'name': '홍길동',
-    'birthday': '981116',
-    'gender': '남자',
-    'job': '대학생'
-  },
-  {
-    'id': 3,
-    'image': 'https://placeimg.com/64/64/3',
-    'name': '이하람',
-    'birthday': '990425',
-    'gender': '여자',
-    'job': '취준생'
-  }
-]
+
 
 // index.html에 있는 root에 App 컴포넌트가 그려지게 된다~
 // 계층구조
 class App extends Component {   // 컴포넌트란 웹 문서에서 어떠한 내용을 보여주기 위한 기본적인 단위
+
+  // 변경될 수 있는 변수
+  state = {
+    customers: ""
+  }
+
+  // api 서버에 접근해서 데이터를 받아오는 작업
+  componentDidMount() {
+    this.callApi()
+      .then(res => this.setState({ customers: res }))
+      .catch(err => console.log(err));
+  }
+
+  callApi = async () => {
+    const response = await fetch('/api/customers')
+    const body = await response.json();
+    return body;
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -67,8 +61,8 @@ class App extends Component {   // 컴포넌트란 웹 문서에서 어떠한 �
           </TableHead>
           {/* 테이블의 내용 */}
           <TableBody>
-            {
-              customers.map(c => {
+            { // this.state.customers ? 참일 때 출력 : 거짓일 때 출력
+              this.state.customers ? this.state.customers.map(c => {
                 return (
                   <Customer
                     key={c.id}
@@ -80,7 +74,7 @@ class App extends Component {   // 컴포넌트란 웹 문서에서 어떠한 �
                     job={c.job}
                   />
                 )
-              })
+              }) : ""
             }
           </TableBody>
         </Table>
