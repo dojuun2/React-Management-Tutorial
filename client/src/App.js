@@ -7,6 +7,7 @@ import { TableHead } from '@mui/material';
 import { TableBody } from '@mui/material';
 import { TableRow } from '@mui/material';
 import { TableCell } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { withStyles } from '@mui/styles';
 
 const styles = theme => ({
@@ -16,10 +17,10 @@ const styles = theme => ({
   },
   table: {
     minWidth: 1080    // 화면이 줄어도 테이블이 무조건 1080이라서 스크롤바 생김
+  },
+  progress: {
   }
 })
-
-
 
 // index.html에 있는 root에 App 컴포넌트가 그려지게 된다~
 // 계층구조
@@ -27,20 +28,27 @@ class App extends Component {   // 컴포넌트란 웹 문서에서 어떠한 �
 
   // 변경될 수 있는 변수
   state = {
-    customers: ""
+    customers: "",
+    completed: 0
   }
 
-  // api 서버에 접근해서 데이터를 받아오는 작업
+  // api 서버에 접근해서 데이터를 받아오는 작업 => 비동기적으로
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ customers: res }))
-      .catch(err => console.log(err));
+    this.timer = setInterval(this.progress, 100);    // 0.02초마다
+    // this.callApi()
+    //   .then(res => this.setState({ customers: res }))
+    //   .catch(err => console.log(err));
   }
 
   callApi = async () => {
     const response = await fetch('/api/customers')
     const body = await response.json();
     return body;
+  }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   }
 
   render() {
@@ -74,7 +82,12 @@ class App extends Component {   // 컴포넌트란 웹 문서에서 어떠한 �
                     job={c.job}
                   />
                 )
-              }) : ""
+              }) :
+                <TableRow>
+                  <TableCell colSpan="6" align="center">
+                    <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
+                  </TableCell>
+                </TableRow>
             }
           </TableBody>
         </Table>
