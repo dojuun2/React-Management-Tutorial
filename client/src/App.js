@@ -23,7 +23,7 @@ const styles = theme => ({
 })
 
 // index.html에 있는 root에 App 컴포넌트가 그려지게 된다~
-// 계층구조
+// html로 치면 바디태그
 class App extends Component {   // 컴포넌트란 웹 문서에서 어떠한 내용을 보여주기 위한 기본적인 단위
 
   // 변경될 수 있는 변수
@@ -35,11 +35,12 @@ class App extends Component {   // 컴포넌트란 웹 문서에서 어떠한 �
   // api 서버에 접근해서 데이터를 받아오는 작업 => 비동기적으로
   componentDidMount() {
     this.timer = setInterval(this.progress, 100);    // 0.02초마다
-    // this.callApi()
-    //   .then(res => this.setState({ customers: res }))
-    //   .catch(err => console.log(err));
+    this.callApi()
+      .then(res => this.setState({ customers: res }))
+      .catch(err => console.log(err));
   }
 
+  // 비동기
   callApi = async () => {
     const response = await fetch('/api/customers')
     const body = await response.json();

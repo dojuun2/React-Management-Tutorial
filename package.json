@@ -8,8 +8,12 @@
     },
     "dependencies": {
         "@material/circular-progress": "^13.0.0",
+        "@mui/core": "^5.0.0-alpha.54",
         "body-parser": "^1.18.3",
-        "express": "^4.16.4"
+        "express": "^4.16.4",
+        "mysql": "^2.18.1",
+        "mysql2": "^2.3.3",
+        "nodemon": "^2.0.15"
     },
     "devDependencies": {
         "concurrently": "^4.0.1"
